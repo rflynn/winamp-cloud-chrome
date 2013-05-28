@@ -1,16 +1,17 @@
 
-var media = function(driver, url, mimetype, title, height, width)
+// TODO: separate YouTube-specific logic from media
+var media = function(driver, url, filepath, mimetype, title, height, width)
 {
-    var title_clean = title.replace(" - YouTube", "");
-    var artist_guess = YouTube.artist_from_title(title);
+    var title_clean = title.replace(/^\s+/,'').replace(/\s+$/,'');
+    var artist_guess = YouTube.artist_from_title(title_clean);
     if (artist_guess) {
         title_clean = title_clean.replace(artist_guess + ' - ', '');
     }
 
     this.driver = driver;
     /* required */
-    this.url = YouTube.url_canonical(url);
-    this.filepath = YouTube.v(url);
+    this.url = url;
+    this.filepath = filepath;
     this.mimetype = mimetype;
     this.title = title_clean;
     /* optional */
@@ -53,7 +54,7 @@ var YouTube = function(url, tab)
     var mimetype = BG.CONTENT['mimetype'];
     var h = BG.CONTENT['height'];
     var w = BG.CONTENT['width'];
-    var m = new media(YouTube, YouTube.url_canonical(url), mimetype, tab.title, h, w);
+    var m = new media(YouTube, YouTube.url_canonical(url), YouTube.v(url), mimetype, tab.title.replace(' - YouTube', ''), h, w);
     return m;
 }
 
