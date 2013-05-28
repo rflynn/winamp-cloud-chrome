@@ -48,14 +48,17 @@ var media = function(driver, url, filepath, mimetype, title, height, width)
     }
 }
 
-var YouTube = function(url, tab)
+var YouTube = function(url, tab, on_media)
 {
-    var BG = chrome.extension.getBackgroundPage();
-    var mimetype = BG.CONTENT['mimetype'];
-    var h = BG.CONTENT['height'];
-    var w = BG.CONTENT['width'];
-    var m = new media(YouTube, YouTube.url_canonical(url), YouTube.v(url), mimetype, tab.title.replace(' - YouTube', ''), h, w);
-    return m;
+    // use async bg page and callbacks
+    // ref: http://stackoverflow.com/questions/14921500/chrome-extension-getbackgroundpage-returns-null-after-awhile
+    chrome.runtime.getBackgroundPage(function(bg){
+        var mimetype = bg.CONTENT['mimetype'];
+        var h = bg.CONTENT['height'];
+        var w = bg.CONTENT['width'];
+        var m = new media(YouTube, YouTube.url_canonical(url), YouTube.v(url), mimetype, tab.title.replace(' - YouTube', ''), h, w);
+        on_media(m);
+    });
 }
 
 YouTube.want = function(url)
@@ -125,23 +128,28 @@ document.addEventListener('DOMContentLoaded', function () {
         var url = tab.url;
         var media;
         if (YouTube.want(url)) {
-            media = new YouTube(url, tab);
-        }
-        if (media) {
-            document.getElementById('mimetype').value = media.mimetype;
-            if (media.height) {
-                document.getElementById('height').value = media.height;
-            }
-            if (media.width) {
-                document.getElementById('width').value = media.width;
-            }
-            // show url, but we don't really use it
-            document.getElementById('url').value = media.url;
-            document.getElementById('filepath').value = media.filepath;
-            document.getElementById('title').value = media.title;
-            document.getElementById('artist').value = media.artist;
+            media = new YouTube(url, tab, on_media);
         } else {
             alert("Not sure what to do with urls like:" + url);
         }
     });
 });
+
+function on_media(media)
+{
+    // update popup form
+    if (media.mimetype) {
+        document.getElementById('mimetype').value = media.mimetype;
+    }
+    if (media.height) {
+        document.getElementById('height').value = media.height;
+    }
+    if (media.width) {
+        document.getElementById('width').value = media.width;
+    }
+    // show url, but we don't really use it
+    document.getElementById('url').value = media.url;
+    document.getElementById('filepath').value = media.filepath;
+    document.getElementById('title').value = media.title;
+    document.getElementById('artist').value = media.artist;
+}
