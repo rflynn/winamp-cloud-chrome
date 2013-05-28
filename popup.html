@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Add to Winamp Cloud Library</title>
+    <style>
+      body {
+        min-width: 357px;
+        overflow-x: hidden;
+      }
+
+      img {
+        margin: 5px;
+        border: 2px solid black;
+        vertical-align: middle;
+        width: 75px;
+        height: 75px;
+      }
+th, .th {
+    font-family:sans-serif;
+    font-size:small;
+    text-align:left;
+    width:10%;
+    max-width:20%;
+    font-weight: bold;
+}
+
+input {
+}
+
+#submit {
+    background: #F3E2A9 url(winamp-cloud.png) no-repeat 1px 1px;
+    background-size: 16px 16px;
+    margin:2px;
+    padding-left:19px;
+    font-weight:bold;
+}
+
+#cancel {
+    background-color: #FAFAFA;
+}
+    </style>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
+     -->
+    <script src="popup.js"></script>
+    <!--script src="jquery.1.9.1.min.js"></script-->
+  </head>
+  <body>
+    <form method="POST" action="https://devcloud.winamp.com/api/1/user/media/announce">
+        <input type="text" id="filepath" name="filepath" value="">
+        <input type="text" id="mimetype" name="mimetype" value="">
+        <input type="text" id="height" name="height" value="">
+        <input type="text" id="width" name="width" value="">
+        <table>
+            <tr>
+                <th>url
+                <td><input readonly="readonly" id="url" name="url" value="..." size="64" style="border:0">
+            <tr>
+                <th>type
+                <td><select readonly="readonly"><option value="text/html">text/html</select>
+            <tr>
+                <th>artist
+                <td><input name="artist" id="artist" value="" size="64">
+
+            <tr>
+                <th><span style="cursor:help" title="Song title">title</span>
+                <td><input id="title" name="title" value="..." size="64">
+            <tr>
+                <th>album
+                <td><input name="album" id="album" value="" size="40">
+                <span class="th">trackno</span>
+                    <select id="trackno">
+                        <option value="">
+                        <option value="1">1
+                        <option value="2">2
+                        <option value="3">3
+                        <option value="4">4
+                        <option value="5">5
+                        <option value="6">6
+                        <option value="7">7
+                        <option value="8">8
+                        <option value="9">9
+                        <option value="10">10
+                        <option value="11">11
+                        <option value="12">12
+                        <option value="13">13
+                        <option value="14">14
+                        <option value="15">15
+                        <option value="16">16
+                        <option value="17">17
+                        <option value="18">18
+                        <option value="19">19
+                    </select>
+            <tr>
+                <th><span style="cursor:help" title="If there are several artists, or a 'featured' artist, this is the 'main' artist">album-artist</span>
+                <td><input name="albumartist" id="albumartist" value="" size="64">
+            <tr>
+                <th>
+                <td><input id="submit" type="submit" value="Add to my Library">
+                    <input id="cancel" type="submit" value="Cancel" onclick="return false; window.close()">
+        </table>
+    </form>
+
+  </body>
+</html>
+
