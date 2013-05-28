@@ -121,16 +121,11 @@ YouTube.artist_from_title = function(title)
 document.addEventListener('DOMContentLoaded', function () {
 
     chrome.tabs.query({'active': true}, function (tabs) {
-        //var url = tabs[0].url;
-        //console.log('hello');
         var tab = tabs[0];
-        //alert(JSON.stringify(tab));
         var url = tab.url;
         var media;
         if (YouTube.want(url)) {
             media = new YouTube(url, tab);
-            //alert('title:' + tab.title + '\nurl:' + tab.url);
-            //alert(JSON.stringify(media));
         }
         if (media) {
             document.getElementById('mimetype').value = media.mimetype;
