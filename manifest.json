@@ -29,9 +29,8 @@
     },
 
     "permissions": [
-        "tabs",
-        "activeTab",
-        "http://www.youtube.com/*"
+        "background",
+        "tabs"
     ],
 
     "background": {
