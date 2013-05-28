@@ -85,13 +85,13 @@ YouTube.url_canonical = function(url)
 {
     // canonical
     // http://www.youtube.com/watch?v=5NV6Rdv1a3I
-    if (url.match(/^http:\/\/www.youtube.com\/watch\?v=[a-zA-Z0-9]{8,64}$/))
+    if (url.match(/^http:\/\/www.youtube.com\/watch\?v=[a-zA-Z0-9_-]{11}$/))
     {
         return url;
     }
     // shortened
     // http://youtu.be/5NV6Rdv1a3I -> http://www.youtube.com/watch?v=5NV6Rdv1a3I&feature=youtu.be
-    if ((r = url.match(/^http:\/\/(?:www\.)?youtu.be\/([a-zA-Z0-9]{8,64})$/)))
+    if ((r = url.match(/^http:\/\/(?:www\.)?youtu.be\/([a-zA-Z0-9_-]{11})$/)))
     {
         return "http://www.youtube.com/watch?v=" + r[1];
     }
