@@ -105,14 +105,6 @@ YouTube.url_canonical = function(url)
     throw "Can't find a video parameter (v=FooBar) in url:" + url;
 };
 
-YouTube.meta = function(sel) {
-    var m = document.querySelectorAll(sel);
-    if (m != [] && m[0] != undefined) {
-        return m[0].getAttribute('content') || null;
-    }
-    return null;
-};
-
 YouTube.artist_from_title = function(title)
 {
     var spl = title.split(' - ');
