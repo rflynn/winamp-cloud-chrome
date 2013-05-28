@@ -4,6 +4,25 @@
     "name": "Winamp Cloud",
     "description": "Add urls to your Winamp Cloud collection",
     "version": "0.1",
+    "default_locale": "en",
+
+    "icons": {
+        "16": "winamp-cloud.png",
+        "48": "winamp-cloud.png",
+       "128": "winamp-cloud.png"
+    },
+
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "contextMenus",
+        "http://www.youtube.com/*"
+    ],
+
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
 
     "page_action": {
         "default_title": "Winamp Cloud",
@@ -20,23 +39,6 @@
             "run_at" : "document_idle",
             "all_frames" : false
         }
-    ],
-
-    "icons": {
-        "16": "winamp-cloud.png",
-        "48": "winamp-cloud.png",
-       "128": "winamp-cloud.png"
-    },
-
-    "permissions": [
-        "tabs",
-        "activeTab",
-        "http://www.youtube.com/*"
-    ],
-
-    "background": {
-        "scripts": ["background.js"],
-        "persistent": false
-    }
+    ]
 
 }
