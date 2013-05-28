@@ -2,7 +2,7 @@
     "manifest_version": 2,
 
     "name": "Winamp Cloud",
-    "description": "Add urls to your Winamp Cloud collection",
+    "description": "Import urls into a Winamp Cloud library",
     "version": "0.1",
 
     "page_action": {

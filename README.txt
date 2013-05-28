@@ -1,5 +1,5 @@
 
-An extension for Google Chrome that allows importing of web-based items.
+Google chrome extension: import urls into a Winamp Cloud library
 
 Get Started
 
