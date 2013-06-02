@@ -20,24 +20,13 @@ var media = function(driver, url, filepath, mimetype, title, height, width)
     this.trackno = null;
     this.height = height;
     this.width = width;
-    /* based on metadata fields */
-    this.metahash = null;
 
     this.to_announce = function()
     {
-        if (this.title && this.artist && this.album && this.trackno)
-        {
-            this.metahash = "...";
-        }
-        if (this.metahash)
-        {
-            this.idhash = "...";
-        }
         var obj = {
             filepath: this.filepath,
             mimetype: this.mimetype,
-            title: this.title,
-            metahash: this.metahash,
+            title:    this.title
         };
         if (this.artist)  obj.artist  = this.artist;
         if (this.album)   obj.album   = this.album;
@@ -48,15 +37,19 @@ var media = function(driver, url, filepath, mimetype, title, height, width)
     }
 }
 
+
 var YouTube = function(url, tab, on_media)
 {
     // use async bg page and callbacks
     // ref: http://stackoverflow.com/questions/14921500/chrome-extension-getbackgroundpage-returns-null-after-awhile
     chrome.runtime.getBackgroundPage(function(bg){
-        var mimetype = bg.CONTENT['mimetype'];
-        var h = bg.CONTENT['height'];
-        var w = bg.CONTENT['width'];
-        var m = new media(YouTube, YouTube.url_canonical(url), YouTube.v(url), mimetype, tab.title.replace(' - YouTube', ''), h, w);
+        var c = bg.get_content();
+        console.log("YouTube");
+        console.log(c);
+        var m = new media(YouTube, YouTube.url_canonical(url),
+            YouTube.v(url),
+            c.mimetype, tab.title.replace(' - YouTube', ''),
+            c.height, c.width);
         on_media(m);
     });
 }
@@ -64,7 +57,7 @@ var YouTube = function(url, tab, on_media)
 YouTube.want = function(url)
 {
     // looks like our type of url
-    return url.match(/^http:\/\/(?:www\.)youtube\.com|youtu\.be\//)
+    return /^http:\/\/(?:www\.)youtube\.com|youtu\.be\//.test(url);
 };
 
 YouTube.v = function(url)
@@ -118,35 +111,76 @@ YouTube.artist_from_title = function(title)
     return null;
 };
 
+// http://www.myspace.com/evrimtuzun/music/songs/hemen-hemen-30410441
+// http://www.myspace.com/video/motley-crue/sex-lyric-video/109083538
+
+var MySpace = function(url, tab, on_media)
+{
+    // use async bg page and callbacks
+    // ref: http://stackoverflow.com/questions/14921500/chrome-extension-getbackgroundpage-returns-null-after-awhile
+    chrome.runtime.getBackgroundPage(function(bg){
+        var c = bg.CONTENT;
+        console.log(c);
+        var m = new media(MySpace, url, c.filepath,
+            c.mimetype, c.title,
+            c.height, c.width);
+        on_media(m);
+    });
+};
+
+MySpace.want = function(url)
+{
+    //return /^http:\/\/www\.myspace\.com\/video\/[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+\/[0-9]{8,10}$/.test(url);
+    return true;
+};
+
+MySpace.title = function(title)
+{
+    return title
+};
+
+MySpace.video_id = function(url)
+{
+    if ((r = url.match(/\/([0-9]{8,10})$/)))
+    {
+        return r[1];
+    }
+    throw "no video id";
+};
+
+
 //chrome.browserAction.onClicked.addListener(function(tab){
 
 // Run as soon as the document's DOM is ready
 document.addEventListener('DOMContentLoaded', function () {
-
     chrome.tabs.query({'active': true}, function (tabs) {
         var tab = tabs[0];
         var url = tab.url;
         var media;
         if (YouTube.want(url)) {
             media = new YouTube(url, tab, on_media);
+        } else if (MySpace.want(url)) {
+            media = new MySpace(url, tab, on_media);
         } else {
             alert("Not sure what to do with urls like:" + url);
         }
     });
 });
 
+function maybe_set(field, val)
+{
+    if (val)
+        document.getElementById(field).val = val;
+}
+
 function on_media(media)
 {
     // update popup form
-    if (media.mimetype) {
-        document.getElementById('mimetype').value = media.mimetype;
-    }
-    if (media.height) {
-        document.getElementById('height').value = media.height;
-    }
-    if (media.width) {
-        document.getElementById('width').value = media.width;
-    }
+    maybe_set('image',    media.image);
+    maybe_set('duration', media.duration);
+    maybe_set('mimetype', media.mimetype);
+    maybe_set('height',   media.height);
+    maybe_set('width',    media.width);
     // show url, but we don't really use it
     document.getElementById('url').value = media.url;
     document.getElementById('filepath').value = media.filepath;
